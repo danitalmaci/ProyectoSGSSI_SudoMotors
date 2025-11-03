@@ -26,14 +26,14 @@
         if (typeof marca !== 'string') return false;
         marca = marca.trim();
         if (marca.length === 0) return false;
-        return (/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü0-9\s\-]+$/).test(marca);
+        return (/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü0-9\s-]+$/).test(marca);
     }
     
     function validModelo(modelo) { // Comprueba que se ha introducido un string de longitud mayor a 0, con o sin números
         if (typeof modelo !== 'string') return false;
 		modelo = modelo.trim();
 		if (modelo.length === 0) return false;
-		return (/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü0-9\s\-]+$/).test(modelo);
+		return (/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü0-9\s-]+$/).test(modelo);
     }
 
 	function validAno(ano) { // Comprueba que se ha introducido un año mayor que 1800

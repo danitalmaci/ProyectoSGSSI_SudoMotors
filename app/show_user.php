@@ -3,6 +3,7 @@ session_start();
 // ------------------------------------------------------------
 // Ver Perfil
 // ------------------------------------------------------------
+header("X-XSS-Protection: 1; mode=block");
 
 include 'connection.php';
 
@@ -14,8 +15,10 @@ if (!isset($_SESSION['username'])) {
 $username = $_SESSION['username'];
 
 // Cargar datos del usuario
-$sql = "SELECT * FROM USUARIO WHERE USERNAME = '$username'";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT * FROM USUARIO WHERE USERNAME = ? LIMIT 1");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if (!$result) {
     die("Error en la consulta: " . $conn->error);

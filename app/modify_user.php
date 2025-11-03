@@ -2,6 +2,7 @@
 // ------------------------------------------------------------
 // Formulario para modificar Usuario
 // ------------------------------------------------------------
+header("X-XSS-Protection: 1; mode=block");
 
 // Datos de conexión a la base de datos
 include 'connection.php';
@@ -14,7 +15,11 @@ if (!isset($_SESSION['username'])) {
 }
 
 // Buscar los datos del usuario
-$query = mysqli_query($conn, "SELECT * FROM USUARIO WHERE USERNAME='" . $_SESSION['username'] . "'");
+$stmt = $conn->prepare("SELECT * FROM USUARIO WHERE USERNAME=? LIMIT 1");
+$stmt->bind_param("s", $_SESSION['username']);
+$stmt->execute();
+$query = $stmt->get_result();
+
 
 // En caso de no encontrar al usuario, lo notifica
 if (!$query || mysqli_num_rows($query) === 0) {
@@ -27,16 +32,17 @@ $user_data = mysqli_fetch_assoc($query);
 
 // Actualizar los datos del usuairo
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	// Recoger los datos nuevos del usuario a partir del formulario
-	$new_dni = $_POST['dni'];
-    $new_nombre = $_POST['nombre'];
-    $new_apellidos = $_POST['apellidos'];
-    $new_telefono = $_POST['telefono'];
-    $new_email = $_POST['email'];
-    $new_f_nacimiento = $_POST['f_nacimiento'];
-    $new_contrasena = $_POST['contrasena'];
-    $confirm_contrasena = $_POST['confirmar_contrasena'];
-    $new_username = $_POST['username'];
+    // Recoger los datos nuevos del usuario a partir del formulario
+    $new_dni          = strtoupper(trim($_POST['dni'] ?? ''));
+    $new_nombre       = htmlspecialchars(trim($_POST['nombre'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $new_apellidos    = htmlspecialchars(trim($_POST['apellidos'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $new_telefono     = filter_var($_POST['telefono'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+    $new_email        = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+    $new_f_nacimiento = $_POST['f_nacimiento'] ?? '';
+    $new_username     = htmlspecialchars(trim($_POST['username'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $new_contrasena   = $_POST['contrasena'] ?? '';
+    $confirm_contrasena = $_POST['confirmar_contrasena'] ?? '';
+
     	
     // Comprobar coincidencia de contraseñas
   	if ($new_contrasena !== $confirm_contrasena) {
@@ -44,11 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 
 	// Comprobar datos repetidos
-  	$checkSql = "SELECT USERNAME, DNI 
-             FROM USUARIO 
-             WHERE USERNAME = '$new_username' OR DNI = '$new_dni'";
-
-  	$res = mysqli_query($conn, $checkSql);
+  	$stmt_check = $conn->prepare("SELECT USERNAME, DNI FROM USUARIO WHERE (USERNAME=? OR DNI=?) AND USERNAME<>?");
+	$stmt_check->bind_param("sss", $new_username, $new_dni, $_SESSION['username']);
+	$stmt_check->execute();
+	$res = $stmt_check->get_result();
   	$exists = mysqli_fetch_assoc($res);
 
   	if ($exists) {
@@ -57,24 +62,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  	} 
  	
  	if(empty($errors)){// Si no hay errores, entonces se actualizan los datos
-   		$sql = "UPDATE USUARIO SET 
-        		NOMBRE='$new_nombre',
-            	APELLIDOS='$new_apellidos',
-            	TELEFONO='$new_telefono',
-            	EMAIL='$new_email',
-            	F_NACIMIENTO='$new_f_nacimiento',
-            	CONTRASENA='$new_contrasena',
-            	USERNAME='$new_username',
-            	DNI='$new_dni'
-            	WHERE USERNAME='" . $_SESSION['username'] . "'";
-		
-		// Se ejecuta la operación y se almacena el resultado de la misma
-    	$result = mysqli_query($conn, $sql);
+   		$stmt_update = $conn->prepare("UPDATE USUARIO SET NOMBRE=?, APELLIDOS=?, TELEFONO=?, EMAIL=?, 
+   				F_NACIMIENTO=?, CONTRASENA=?, USERNAME=?, DNI=? WHERE USERNAME=? LIMIT 1");
+		$stmt_update->bind_param("sssssssss",
+    					$new_nombre,
+    					$new_apellidos,
+    					$new_telefono,
+    					$new_email,
+    					$new_f_nacimiento,
+    					$new_contrasena,
+    					$new_username,
+   					$new_dni,
+   					$_SESSION['username']);
+
 		
 		// Se actualiza el username en la variable de sesión y se redirije a la página para visualizar los datos del usuario
-    	$_SESSION['username'] = $new_username;
-    	header("Location: show_user.php?user=" . urlencode($new_username));
-    	exit;
+    		if ($stmt_update->execute()) {
+    			$_SESSION['username'] = $new_username;
+    			header("Location: show_user.php?user=" . urlencode($new_username));
+    			exit;
+		}
+
     	}
 }
 

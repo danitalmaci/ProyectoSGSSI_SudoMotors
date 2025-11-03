@@ -3,6 +3,9 @@
 // Formulario para modificar Vehiculo
 // ------------------------------------------------------------
 
+//Cabecera seguridad ante XSS
+header("X-XSS-Protection: 1; mode=block");
+
 // Datos de conexión a la base de datos
 include 'connection.php';
 
@@ -13,12 +16,20 @@ if (!isset($_GET['matricula'])) {
     exit;
 }
 
-// Inicializar variables, además de guardar el parámetro matrícula del URL
-$matricula = $_GET['matricula'];
+$matricula = strtoupper(trim($_GET['matricula']));
+if (!preg_match('/^[0-9]{4}\s?[A-Z]{3}$/', $matricula)) {
+    die("Matrícula no válida.");
+}
+
+// Inicializar variables
 $errors = [];
 
 // Buscar los datos del vehículo a partir del parámetro del formulario
-$query = mysqli_query($conn, "SELECT * FROM VEHICULO WHERE MATRICULA='$matricula'");
+$stmt = $conn->prepare("SELECT * FROM VEHICULO WHERE MATRICULA=? LIMIT 1");
+$stmt->bind_param("s", $matricula);
+$stmt->execute();
+$query = $stmt->get_result();
+
 // Si no hay resultados, se guarda null
 if (!$query || mysqli_num_rows($query) == 0) {
     $vehiculo_data = null;
@@ -31,17 +42,18 @@ else {
 // Actualizar los datos del vehículo
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Recoger los datos nuevos del vehículo a partir del formulario
-    $new_matricula = $_POST['matricula'] ?? '';
-    $new_marca     = $_POST['marca'] ?? '';
-    $new_modelo    = $_POST['modelo'] ?? '';
-    $new_ano       = $_POST['ano'] ?? '';
-    $new_kms       = $_POST['kms'] ?? '';
+    $new_matricula = strtoupper(trim($_POST['matricula'] ?? '')); 
+    $new_marca = htmlspecialchars(trim($_POST['marca'] ?? ''), ENT_QUOTES, 'UTF-8'); 
+    $new_modelo = htmlspecialchars(trim($_POST['modelo'] ?? ''), ENT_QUOTES, 'UTF-8'); 
+    $new_ano = filter_var($_POST['ano'] ?? '', FILTER_VALIDATE_INT); 
+    $new_kms = filter_var($_POST['kms'] ?? '', FILTER_VALIDATE_INT);
 
     // Comprobar si ya existe otro coche con la misma matrícula
-    $check_vehiculo = mysqli_query(
-        $conn,
-        "SELECT * FROM VEHICULO WHERE MATRICULA='$new_matricula' AND MATRICULA <> '$matricula'"
-    );
+    $stmt = $conn->prepare("SELECT * FROM VEHICULO WHERE MATRICULA=? AND MATRICULA<>?");
+    $stmt->bind_param("ss", $new_matricula, $matricula);
+    $stmt->execute();
+    $check_vehiculo = $stmt->get_result();
+    $stmt->close();
     
     // Si ya existe un coche con la matrícula, se almacena el error
     if ($check_vehiculo && mysqli_num_rows($check_vehiculo) > 0) {
@@ -50,16 +62,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Si no hay errores se sigue con la modificacion de datos
     if (empty($errors)) {
-        $sql = "UPDATE VEHICULO SET 
-                MATRICULA='$new_matricula',
-                MARCA='$new_marca',
-                MODELO='$new_modelo',
-                ANO='$new_ano',
-                KMS='$new_kms'
-                WHERE MATRICULA='$matricula'";
-        
-        // Se ejecuta la operación y se almacena el resultado de la misma
-        $result = mysqli_query($conn, $sql);
+        $stmt = $conn->prepare("UPDATE VEHICULO SET MATRICULA=?, MARCA=?, MODELO=?, ANO=?, KMS=? WHERE MATRICULA=?");
+	$stmt->bind_param("ssssss", $new_matricula, $new_marca, $new_modelo, $new_ano, $new_kms, $matricula);
+	$result = $stmt->execute();
+	$stmt->close();
+
 
         // Si la operación ha sido correcta, redirije a la página show_item con el flag success, que indica el éxito de la ejecución
         if ($result) {
@@ -69,8 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Si la operación no se ha ejecutado correctamente, se almacena el error
         else {
-            
-            $errors['general'] = "Error al actualizar el vehículo: " . mysqli_error($conn);
+		error_log("Error al actualizar vehículo: " . $conn->error);
+		$errors['general'] = "Error al actualizar el vehículo. Inténtelo más tarde.";
         }
     } 
 

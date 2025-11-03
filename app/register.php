@@ -2,6 +2,7 @@
 // ------------------------------------------------------------
 // Formulario para registrarse
 // ------------------------------------------------------------
+header("X-XSS-Protection: 1; mode=block");
 
 include 'connection.php'; 
 session_start();
@@ -10,15 +11,16 @@ $message = '';
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $username     = $_POST['usuario'] ?? '';
+  $username     = htmlspecialchars(trim($_POST['usuario'] ?? ''), ENT_QUOTES, 'UTF-8');
   $password     = $_POST['contrasena'] ?? '';
   $confirm_password = $_POST['confirmar_contrasena'] ?? '';
-  $nombre       = $_POST['nombre'] ?? '';
-  $apellidos    = $_POST['apellidos'] ?? '';
-  $dni          = $_POST['dni'] ?? '';
-  $email        = $_POST['email'] ?? '';
-  $telefono     = $_POST['telefono'] ?? '';
+  $nombre       = htmlspecialchars(trim($_POST['nombre'] ?? ''), ENT_QUOTES, 'UTF-8');
+  $apellidos    = htmlspecialchars(trim($_POST['apellidos'] ?? ''), ENT_QUOTES, 'UTF-8');
+  $dni          = strtoupper(trim($_POST['dni'] ?? ''));
+  $email        = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+  $telefono     = filter_var($_POST['telefono'] ?? '', FILTER_SANITIZE_NUMBER_INT);
   $f_nacimiento = $_POST['f_nacimiento'] ?? '';
+
 
   // Comprobar contraseñas
   if ($password !== $confirm_password) {
@@ -26,9 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // Comprobar datos repetidos
-  $checkSql = "SELECT USERNAME, EMAIL, DNI FROM USUARIO WHERE USERNAME='$username' OR EMAIL='$email' OR DNI='$dni'";
-  $res = mysqli_query($conn, $checkSql);
-  $exists = mysqli_fetch_assoc($res);
+  $stmt_check = $conn->prepare("SELECT USERNAME, EMAIL, DNI FROM USUARIO WHERE USERNAME=? OR EMAIL=? OR DNI=? LIMIT 1");
+  $stmt_check->bind_param("sss", $username, $email, $dni);
+  $stmt_check->execute();
+  $res = $stmt_check->get_result();
+  $exists = $res->fetch_assoc();
 
   if ($exists) {
     if ($exists['USERNAME'] === $username) $errors['usuario'] = "El usuario ya existe.";
@@ -38,12 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Insertar usuario si no hay errores
   if (empty($errors)) {
-    $insertSql = "INSERT INTO USUARIO (DNI, NOMBRE, APELLIDOS, TELEFONO, EMAIL, F_NACIMIENTO, CONTRASENA, USERNAME)
-                  VALUES ('$dni', '$nombre', '$apellidos', '$telefono', '$email', '$f_nacimiento', '$password', '$username')";
-    
-    $result = mysqli_query($conn, $insertSql);
+    $stmt_insert = $conn->prepare("INSERT INTO USUARIO (DNI, NOMBRE, APELLIDOS, TELEFONO, EMAIL, F_NACIMIENTO, CONTRASENA, USERNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt_insert->bind_param("ssssssss", $dni, $nombre, $apellidos, $telefono, $email, $f_nacimiento, $hashed_password, $username);
 
-    if ($result) {
+
+    if ($stmt_insert->execute()) {
       $_SESSION['username'] = $username;
       header("Location: items.php");
       exit;

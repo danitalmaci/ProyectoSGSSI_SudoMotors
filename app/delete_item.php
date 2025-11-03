@@ -1,20 +1,28 @@
-<?php
+<?php session_start();
 // ------------------------------------------------------------
 // Formulario para borrar un vehículo (con confirmación)
 // ------------------------------------------------------------
+header("X-XSS-Protection: 1; mode=block");
 
 include 'connection.php'; 
-session_start();
 
 if (!isset($_GET['matricula'])) {
     echo "No se ha especificado una matrícula.";
     exit;
 }
 
-$matricula = $_GET['matricula'];
+// Validar y sanear matrícula
+$matricula = strtoupper(trim($_GET['matricula'] ?? ''));
+if (!preg_match('/^[0-9]{4}\s?[A-Z]{3}$/', $matricula)) {
+    die("Matrícula no válida.");
+}
+$matricula = mysqli_real_escape_string($conn, $matricula);
 
-// Buscar los datos del vehículo
-$query = mysqli_query($conn, "SELECT * FROM VEHICULO WHERE MATRICULA='$matricula'");
+$stmt = $conn->prepare("SELECT * FROM VEHICULO WHERE MATRICULA=?");
+$stmt->bind_param("s", $matricula);
+$stmt->execute();
+$query = $stmt->get_result();
+$stmt->close();
 
 if (!$query || mysqli_num_rows($query) <= 0) {
     echo "Vehículo no encontrado.";
@@ -25,9 +33,16 @@ $vehiculo_data = mysqli_fetch_assoc($query);
 
 // Si se ha confirmado la eliminación (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    mysqli_query($conn, "DELETE FROM VEHICULO WHERE MATRICULA='$matricula'");
-    header("Location: items.php?success=2");
-    exit;
+    $stmt = $conn->prepare("DELETE FROM VEHICULO WHERE MATRICULA=? LIMIT 1");
+    $stmt->bind_param("s", $matricula);
+    
+    if ($stmt->execute()) {
+        header("Location: items.php?success=2");
+        exit;
+    } else {
+        echo "Error al eliminar el vehículo: " . htmlspecialchars($stmt->error);
+        exit;
+    }
 }
 
 $conn->close();

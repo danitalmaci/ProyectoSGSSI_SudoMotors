@@ -2,6 +2,7 @@
 // ------------------------------------------------------------
 // Ver información del vehículo	
 // ------------------------------------------------------------
+header("X-XSS-Protection: 1; mode=block");
 
 session_start();
 include 'connection.php';
@@ -10,10 +11,16 @@ $vehiculos_html = "";
 $row = null;
 
 if (isset($_GET['matricula'])) {
-    $matricula = $_GET['matricula'];
+    $matricula = strtoupper(trim($_GET['matricula']));
+    if (!preg_match('/^[0-9]{4}\s?[A-Z]{3}$/', $matricula)) {
+        die("Matrícula no válida.");
+    }
 
-    $sql = "SELECT * FROM VEHICULO WHERE MATRICULA = '$matricula'";
-    $result = $conn->query($sql);
+    $stmt = $conn->prepare("SELECT * FROM VEHICULO WHERE MATRICULA = ? LIMIT 1");
+    $stmt->bind_param("s", $matricula);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
 
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();

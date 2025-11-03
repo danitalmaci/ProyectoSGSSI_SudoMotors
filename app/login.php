@@ -1,6 +1,9 @@
 <?php
 // Comienza la sesión
 session_start();
+
+header("X-XSS-Protection: 1; mode=block");
+
 include 'connection.php'; // Conexión a la BD
 
 $message = "";
@@ -10,8 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $_POST["contrasena"];
     $v_user = $user;
 
-    $sql = "SELECT * FROM USUARIO WHERE USERNAME = '$user' AND CONTRASENA = '$password'";
-    $result = $conn->query($sql);
+    $stmt = $conn->prepare("SELECT * FROM USUARIO WHERE USERNAME = ? AND CONTRASENA = ?");
+    $stmt->bind_param("ss", $user, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
         $userData = $result->fetch_assoc();
