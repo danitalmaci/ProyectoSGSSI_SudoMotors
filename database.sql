@@ -1,97 +1,97 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
--- https://www.phpmyadmin.net/
---
+-- versión 5.0.2
 -- Servidor: db
--- Tiempo de generación: 16-09-2020 a las 16:37:17
--- Versión del servidor: 10.5.5-MariaDB-1:10.5.5+maria~focal
+-- Tiempo de generación: 04-11-2025
+-- Versión del servidor: 10.5.5-MariaDB
 -- Versión de PHP: 7.4.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+SET NAMES utf8mb4;
 
 --
 -- Base de datos: `database`
 --
 
 -- --------------------------------------------------------
+-- Tabla de usuarios
+-- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `usuario`
---
-
-CREATE TABLE `USUARIO` (
-  `DNI` varchar(10) NOT NULL UNIQUE,
-  `NOMBRE` text NOT NULL,
-  `APELLIDOS` text NOT NULL,
-  `TELEFONO` int(9) NOT NULL UNIQUE,
-  `EMAIL` text NOT NULL UNIQUE,
-  `F_NACIMIENTO` date NOT NULL,
-  `CONTRASENA` varchar(255) NOT NULL,
-  `USERNAME` text NOT NULL UNIQUE
+CREATE TABLE IF NOT EXISTS `USUARIO` (
+  `DNI` VARCHAR(10) NOT NULL UNIQUE,
+  `NOMBRE` VARCHAR(100) NOT NULL,
+  `APELLIDOS` VARCHAR(150) NOT NULL,
+  `TELEFONO` VARCHAR(15) NOT NULL UNIQUE,
+  `EMAIL` VARCHAR(100) NOT NULL UNIQUE,
+  `F_NACIMIENTO` DATE NOT NULL,
+  `CONTRASENA` VARCHAR(255) NOT NULL,
+  `USERNAME` VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (`DNI`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `usuario`
+-- Datos de ejemplo de usuarios
 --
 
 INSERT INTO `USUARIO` (`DNI`, `NOMBRE`, `APELLIDOS`, `TELEFONO`, `EMAIL`, `F_NACIMIENTO`, `CONTRASENA`, `USERNAME`) VALUES
-('12345678-Z', 'Aitor', 'Jimenez Jimenez', '668252000', 'aitorji@gmail.com', '2002/10/12', 'RonCola300', 'aitorjiji');
-
-INSERT INTO `USUARIO` (`DNI`, `NOMBRE`, `APELLIDOS`, `TELEFONO`, `EMAIL`, `F_NACIMIENTO`, `CONTRASENA`, `USERNAME`) VALUES
-('22770213-Y', 'June', 'Alvarez Jimenez', '667925412', 'juneji@gmail.com', '2001/02/16', 'VodkaLimon200', 'junecastro');
-
-
+('12345678-Z', 'Aitor', 'Jimenez Jimenez', '668252000', 'aitorji@gmail.com', '2002-10-12', 'RonCola300', 'aitorjiji'),
+('22770213-Y', 'June', 'Alvarez Jimenez', '667925412', 'juneji@gmail.com', '2001-02-16', 'VodkaLimon200', 'junecastro');
 
 
 -- --------------------------------------------------------
+-- Tabla para registrar intentos de login
+-- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `vehiculo`
---
+CREATE TABLE IF NOT EXISTS `LOGIN_INTENTOS` (
+  `ID` INT AUTO_INCREMENT PRIMARY KEY,
+  `USERNAME` VARCHAR(50),
+  `IP_ADDRESS` VARCHAR(45),
+  `INTENTOS` INT DEFAULT 0,
+  `LAST_ATTEMPT` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `VEHICULO` (
-  `MATRICULA` varchar(8) NOT NULL UNIQUE,
-  `MARCA` text NOT NULL,
-  `MODELO` text NOT NULL,
-  `ANO` int(4) NOT NULL,
-  `KMS` int NOT NULL
+
+-- --------------------------------------------------------
+-- NUEVA TABLA: Logs de actividad de inicio de sesión
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `LOGIN_LOGS` (
+  `ID` INT AUTO_INCREMENT PRIMARY KEY,
+  `USERNAME` VARCHAR(50),
+  `IP_ADDRESS` VARCHAR(45),
+  `FECHA` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `RESULTADO` ENUM('exito','fallo') NOT NULL,
+  `NAVEGADOR` TEXT,
+  `DETALLES` TEXT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Esta tabla guardará cada intento, exitoso o fallido.
+-- Así podrás auditar actividad sospechosa o ataques por fuerza bruta.
+
+
+-- --------------------------------------------------------
+-- Tabla de vehículos
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `VEHICULO` (
+  `MATRICULA` VARCHAR(8) NOT NULL UNIQUE,
+  `MARCA` VARCHAR(100) NOT NULL,
+  `MODELO` VARCHAR(100) NOT NULL,
+  `ANO` INT NOT NULL,
+  `KMS` INT NOT NULL,
+  PRIMARY KEY (`MATRICULA`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `vehiculo`
+-- Datos de ejemplo de vehículos
 --
 
 INSERT INTO `VEHICULO` (`MATRICULA`, `MARCA`, `MODELO`, `ANO`, `KMS`) VALUES
-('7895 TYU', 'Kia', 'Sportage', '2018', '205623');
-INSERT INTO `VEHICULO` (`MATRICULA`, `MARCA`, `MODELO`, `ANO`, `KMS`) VALUES
-('6255 XDD', 'Ferrari', 'Spider', '2001', '89985');
-INSERT INTO `VEHICULO` (`MATRICULA`, `MARCA`, `MODELO`, `ANO`, `KMS`) VALUES
-('3326 IOP', 'Ford', 'Focus', '2025', '235');
+('7895 TYU', 'Kia', 'Sportage', 2018, 205623),
+('6255 XDD', 'Ferrari', 'Spider', 2001, 89985),
+('3326 IOP', 'Ford', 'Focus', 2025, 235);
 
 
-
-
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `USUARIO`
-  ADD PRIMARY KEY (`DNI`);
-
---
--- Indices de la tabla `vehiculo`
---
-ALTER TABLE `VEHICULO`
-  ADD PRIMARY KEY (`MATRICULA`);
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
