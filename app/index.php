@@ -3,6 +3,7 @@
 session_start([
     'cookie_lifetime' => 0,           // La sesión se cierra cuando se cierra el navegador.
     'cookie_path' => '/',          
+    
     //'cookie_secure' => true,          // La cookie se envia sobre conexiones HTTPS.
     //'cookie_httponly' => true,        // La cookie solo es accesible a través de HTTP.
     //'cookie_samesite' => 'Lax',       // Define la política de SameSite.

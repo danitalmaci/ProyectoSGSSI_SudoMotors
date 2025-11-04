@@ -5,6 +5,9 @@
 session_start();
 header("X-XSS-Protection: 1; mode=block");
 include 'connection.php';
+include 'includes/security.php';
+verificar_csrf();
+
 
 // ------------------------------------------------------------
 // CONTROL DE ACCESO
@@ -130,6 +133,7 @@ include("includes/head.php");
 <?php endif; ?>
 
 <form id="item_modify_form" method="post" action="">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <label>Matrícula
         <input
             type="text"

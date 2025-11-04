@@ -1,3 +1,28 @@
+<?php
+// CONFIGURACIÓN DE SEGURIDAD GLOBAL//
+
+// Cabeceras de seguridad HTTP
+header("X-Frame-Options: DENY");
+header("X-Content-Type-Options: nosniff");
+header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self'; object-src 'none';");
+
+// Solo configuramos las cookies si la sesión NO está activa
+if (session_status() === PHP_SESSION_NONE) {
+  session_set_cookie_params([
+    'httponly' => true,
+    'secure' => false,   // Cambiar a true si usamos HTTPS
+    'samesite' => 'Strict'
+  ]);
+  session_start();
+}
+
+// Token CSRF (si no existe, se crea)
+if (!isset($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+?>
+
 <!-- includes/head.php -->
 <!DOCTYPE html>
 <html lang="es">
@@ -28,7 +53,7 @@
       color: var(--pico-muted-color);
     }
   </style>
-    <link rel="icon" href="/media/favicon.png" type="image/png">
+  <link rel="icon" href="/media/favicon.png" type="image/png">
 </head>
 <body>
   <main>

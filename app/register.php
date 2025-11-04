@@ -5,6 +5,8 @@
 header("X-XSS-Protection: 1; mode=block");
 
 include 'connection.php'; 
+include 'includes/security.php';
+verificar_csrf();
 session_start();
 
 $message = '';
@@ -82,6 +84,7 @@ include("includes/head.php");
 <?php endif; ?>
 
 <form id="register_form" method="POST" action="">
+  <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
   <label>Usuario:
     <input type="text" name="usuario" required value="<?php echo $v_usuario; ?>">
     <?php if (isset($errors['usuario'])): ?>

@@ -3,6 +3,8 @@ session_start();
 header("X-XSS-Protection: 1; mode=block");
 
 include 'connection.php'; // conexión a la BD
+include 'includes/security.php';
+verificar_csrf();
 
 $message = "";
 $tiempoRestante = 0;
@@ -125,6 +127,7 @@ include("includes/head.php");
 <?php endif; ?>
 
 <form id="login_form" method="POST" action="">
+  <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
   <label for="user">Usuario:</label>
   <input type="text" id="user" name="user" required value="<?= htmlspecialchars($v_user) ?>" <?= $tiempoRestante > 0 ? 'disabled' : '' ?>>
 

@@ -7,6 +7,8 @@ header("X-XSS-Protection: 1; mode=block");
 // Datos de conexión a la base de datos
 include 'connection.php';
 include 'includes/access_control.php';
+include 'includes/security.php';
+verificar_csrf();
 
 // Exigir sesión iniciada
 requireLogin();
@@ -108,6 +110,7 @@ include("includes/head.php");
 
 	
 	<form id="user_modify_form" method="post">
+		<input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 		<label>Username:</label>
     	<input type="text" name="username" value="<?= htmlspecialchars($user_data['USERNAME']) ?>" required><br>
     	<?php if (isset($errors['dni'])): ?>

@@ -5,6 +5,8 @@
 session_start();
 header("X-XSS-Protection: 1; mode=block");
 include 'connection.php';
+include 'includes/security.php';
+verificar_csrf();
 
 // ------------------------------------------------------------
 // CONTROL DE ACCESO
@@ -80,7 +82,7 @@ include("includes/head.php");
 
 <form method="post" 
       style="margin-top:1.5rem; display:flex; flex-direction:column; gap:0.5rem;">
-  
+  <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
   <button type="submit" class="contrast">Sí, borrar vehículo</button>
   <button type="button" onclick="window.location.href='show_item.php?matricula=<?= urlencode($matricula) ?>'">
       Cancelar
