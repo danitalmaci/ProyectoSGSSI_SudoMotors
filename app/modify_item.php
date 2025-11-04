@@ -1,13 +1,16 @@
-<?php session_start();
+<?php
 // ------------------------------------------------------------
-// Formulario para modificar Vehiculo
+// FORMULARIO MODIFICAR VEHÍCULO
 // ------------------------------------------------------------
-
-//Cabecera seguridad ante XSS
+session_start();
 header("X-XSS-Protection: 1; mode=block");
-
-// Datos de conexión a la base de datos
 include 'connection.php';
+
+// ------------------------------------------------------------
+// CONTROL DE ACCESO
+// ------------------------------------------------------------
+requireLogin();
+requireAdmin();
 
 // Comprobar si la URL contiene el parámetro necesario, la matrícula
 if (!isset($_GET['matricula'])) {

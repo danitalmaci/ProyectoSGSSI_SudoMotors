@@ -1,10 +1,16 @@
-<?php session_start();
+<?php
 // ------------------------------------------------------------
-// Formulario para borrar un vehículo (con confirmación)
+// FORMULARIO ELIMINAR VEHÍCULO
 // ------------------------------------------------------------
+session_start();
 header("X-XSS-Protection: 1; mode=block");
+include 'connection.php';
 
-include 'connection.php'; 
+// ------------------------------------------------------------
+// CONTROL DE ACCESO
+// ------------------------------------------------------------
+requireLogin();
+requireAdmin();
 
 if (!isset($_GET['matricula'])) {
     echo "No se ha especificado una matrícula.";

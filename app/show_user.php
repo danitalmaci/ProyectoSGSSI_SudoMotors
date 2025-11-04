@@ -6,13 +6,12 @@ session_start();
 header("X-XSS-Protection: 1; mode=block");
 
 include 'connection.php';
+include 'includes/access_control.php';
 
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit;
-}
+// Exigir sesión iniciada
+requireLogin();
 
-$username = $_SESSION['username'];
+$username = $_SESSION['USERNAME'];
 
 // Cargar datos del usuario
 $stmt = $conn->prepare("SELECT * FROM USUARIO WHERE USERNAME = ? LIMIT 1");

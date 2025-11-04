@@ -6,17 +6,14 @@ header("X-XSS-Protection: 1; mode=block");
 
 // Datos de conexión a la base de datos
 include 'connection.php';
+include 'includes/access_control.php';
 
-// Comprobar si el usuario está identificado
-if (!isset($_SESSION['username'])) {
-	// Si no está identificado le lleva a la página de iniciar sesión
-   	header("Location: login.php");
-    exit;
-}
+// Exigir sesión iniciada
+requireLogin();
 
 // Buscar los datos del usuario
 $stmt = $conn->prepare("SELECT * FROM USUARIO WHERE USERNAME=? LIMIT 1");
-$stmt->bind_param("s", $_SESSION['username']);
+$stmt->bind_param("s", $_SESSION['USERNAME']);
 $stmt->execute();
 $query = $stmt->get_result();
 
@@ -51,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	// Comprobar datos repetidos
   	$stmt_check = $conn->prepare("SELECT USERNAME, DNI FROM USUARIO WHERE (USERNAME=? OR DNI=?) AND USERNAME<>?");
-	$stmt_check->bind_param("sss", $new_username, $new_dni, $_SESSION['username']);
+	$stmt_check->bind_param("sss", $new_username, $new_dni, $_SESSION['USERNAME']);
 	$stmt_check->execute();
 	$res = $stmt_check->get_result();
   	$exists = mysqli_fetch_assoc($res);
@@ -73,12 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     					$new_contrasena,
     					$new_username,
    					$new_dni,
-   					$_SESSION['username']);
+   					$_SESSION['USERNAME']);
 
 		
 		// Se actualiza el username en la variable de sesión y se redirije a la página para visualizar los datos del usuario
     		if ($stmt_update->execute()) {
-    			$_SESSION['username'] = $new_username;
+    			$_SESSION['USERNAME'] = $new_username;
     			header("Location: show_user.php?user=" . urlencode($new_username));
     			exit;
 		}
@@ -148,7 +145,7 @@ include("includes/head.php");
 		<input type="date" name="f_nacimiento" value="<?= htmlspecialchars($user_data['F_NACIMIENTO']) ?>" required><br>
 
 		<button type="button" id="user_modify_submit">Guardar cambios</button>
-		<button type="button" onclick="window.location.href='show_user.php?user=<?= urlencode($_SESSION['username']) ?>'">
+		<button type="button" onclick="window.location.href='show_user.php?user=<?= urlencode($_SESSION['USERNAME']) ?>'">
     		Cancelar
 		</button>
 	</form>

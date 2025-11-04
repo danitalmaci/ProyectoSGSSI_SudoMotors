@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `USUARIO` (
   `F_NACIMIENTO` DATE NOT NULL,
   `CONTRASENA` VARCHAR(255) NOT NULL,
   `USERNAME` VARCHAR(50) NOT NULL UNIQUE,
+   `ROLE` VARCHAR(20) DEFAULT 'user',
   PRIMARY KEY (`DNI`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -37,6 +38,8 @@ CREATE TABLE IF NOT EXISTS `USUARIO` (
 INSERT INTO `USUARIO` (`DNI`, `NOMBRE`, `APELLIDOS`, `TELEFONO`, `EMAIL`, `F_NACIMIENTO`, `CONTRASENA`, `USERNAME`) VALUES
 ('12345678-Z', 'Aitor', 'Jimenez Jimenez', '668252000', 'aitorji@gmail.com', '2002-10-12', 'RonCola300', 'aitorjiji'),
 ('22770213-Y', 'June', 'Alvarez Jimenez', '667925412', 'juneji@gmail.com', '2001-02-16', 'VodkaLimon200', 'junecastro');
+INSERT INTO `USUARIO` (`DNI`, `NOMBRE`, `APELLIDOS`, `TELEFONO`, `EMAIL`, `F_NACIMIENTO`, `CONTRASENA`, `USERNAME`, `ROLE`) VALUES
+('36470906-J', 'Administrador', 'Administrador', '123456789', 'admin@gmail.com', '2000-01-01', 'admin', 'admin', 'admin');
 
 
 -- --------------------------------------------------------

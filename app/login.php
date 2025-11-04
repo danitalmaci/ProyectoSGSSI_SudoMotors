@@ -46,16 +46,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $result = $stmt->get_result();
 
         if ($result && $result->num_rows > 0) {
-            // LOGIN CORRECTO
-            $userData = $result->fetch_assoc();
-            $_SESSION['USERNAME'] = $userData['USERNAME'];
+    	    // LOGIN CORRECTO
+    	    $userData = $result->fetch_assoc();
 
-            $conn->query("DELETE FROM LOGIN_INTENTOS WHERE USERNAME = '$user' OR IP_ADDRESS = '$ip'");
-            registrarLog($conn, $user, $ip, 'EXITO', 'Inicio de sesión correcto');
+    	    // Guardar usuario y rol
+    	    $_SESSION['USERNAME'] = $userData['USERNAME'];
+    	    $_SESSION['ROLE'] = $userData['ROLE'] ?? 'user'; // Rol por defecto
 
-            header("Location: items.php");
-            exit;
-        } else {
+    	    // Limpiar intentos fallidos
+    	    $conn->query("DELETE FROM LOGIN_INTENTOS WHERE USERNAME = '$user' OR IP_ADDRESS = '$ip'");
+    	    registrarLog($conn, $user, $ip, 'EXITO', 'Inicio de sesión correcto');
+
+    	    header("Location: items.php");
+    	    exit;
+	} else {
             // LOGIN FALLIDO
             registrarIntento($conn, $user, $ip);
             registrarLog($conn, $user, $ip, 'FALLO', 'Usuario o contraseña incorrectos');
