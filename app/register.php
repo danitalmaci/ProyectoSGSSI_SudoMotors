@@ -2,12 +2,12 @@
 // ------------------------------------------------------------
 // Formulario para registrarse
 // ------------------------------------------------------------
+session_start();
 header("X-XSS-Protection: 1; mode=block");
 
 include 'connection.php'; 
 include 'includes/security.php';
 verificar_csrf();
-session_start();
 
 $message = '';
 $errors = [];
@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Insertar usuario si no hay errores
   if (empty($errors)) {
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $stmt_insert = $conn->prepare("INSERT INTO USUARIO (DNI, NOMBRE, APELLIDOS, TELEFONO, EMAIL, F_NACIMIENTO, CONTRASENA, USERNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt_insert->bind_param("ssssssss", $dni, $nombre, $apellidos, $telefono, $email, $f_nacimiento, $hashed_password, $username);
 
