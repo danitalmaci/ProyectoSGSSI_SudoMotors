@@ -12,6 +12,7 @@ verificar_csrf();
 // ------------------------------------------------------------
 // CONTROL DE ACCESO
 // ------------------------------------------------------------
+require_once 'includes/init.php';
 requireLogin();
 requireAdmin();
 
