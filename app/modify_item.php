@@ -5,6 +5,7 @@
 session_start();
 header("X-XSS-Protection: 1; mode=block");
 include 'connection.php';
+include 'includes/access_control.php';
 include 'includes/security.php';
 verificar_csrf();
 
