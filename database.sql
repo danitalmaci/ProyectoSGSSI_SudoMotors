@@ -15,7 +15,7 @@ SET NAMES utf8mb4;
 --
 
 -- --------------------------------------------------------
--- Tabla de usuarios
+-- Tabla de usuario
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `USUARIO` (
@@ -32,12 +32,12 @@ CREATE TABLE IF NOT EXISTS `USUARIO` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Datos de ejemplo de usuarios
+-- Datos de ejemplo de usuario
 --
 
 INSERT INTO `USUARIO` (`DNI`, `NOMBRE`, `APELLIDOS`, `TELEFONO`, `EMAIL`, `F_NACIMIENTO`, `CONTRASENA`, `USERNAME`) VALUES
-('12345678-Z', 'Aitor', 'Jimenez Jimenez', '668252000', 'aitorji@gmail.com', '2002-10-12', 'RonCola300', 'aitorjiji'),
-('22770213-Y', 'June', 'Alvarez Jimenez', '667925412', 'juneji@gmail.com', '2001-02-16', 'VodkaLimon200', 'junecastro');
+('12345678-Z', 'Aitor', 'Jimenez Jimenez', '668252000', 'aitorji@gmail.com', '2002-10-12', 'RonCola300?', 'aitorjiji'),
+('22770213-Y', 'June', 'Alvarez Jimenez', '667925412', 'juneji@gmail.com', '2001-02-16', 'VodkaLimon200?', 'junecastro');
 INSERT INTO `USUARIO` (`DNI`, `NOMBRE`, `APELLIDOS`, `TELEFONO`, `EMAIL`, `F_NACIMIENTO`, `CONTRASENA`, `USERNAME`, `ROLE`) VALUES
 ('36470906-J', 'Administrador', 'Administrador', '123456789', 'admin@gmail.com', '2000-01-01', 'admin', 'admin', 'admin');
 
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `LOGIN_INTENTOS` (
 
 
 -- --------------------------------------------------------
--- NUEVA TABLA: Logs de actividad de inicio de sesión
+-- Tabla de logs de actividad de inicio de sesión
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `LOGIN_LOGS` (
@@ -69,12 +69,9 @@ CREATE TABLE IF NOT EXISTS `LOGIN_LOGS` (
   `DETALLES` TEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Esta tabla guardará cada intento, exitoso o fallido.
--- Así podrás auditar actividad sospechosa o ataques por fuerza bruta.
-
 
 -- --------------------------------------------------------
--- Tabla de vehículos
+-- Tabla de vehículo
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `VEHICULO` (
@@ -87,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `VEHICULO` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Datos de ejemplo de vehículos
+-- Datos de ejemplo de vehículo
 --
 
 INSERT INTO `VEHICULO` (`MATRICULA`, `MARCA`, `MODELO`, `ANO`, `KMS`) VALUES
