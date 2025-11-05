@@ -73,21 +73,13 @@ include("includes/head.php");
 <?= $vehiculos_html ?>
 
 <?php if ($row): ?>
-  <div style="margin-top: 2rem; display:flex; flex-direction:column; gap:0.75rem;">
-    <form action="modify_item.php" method="get" style="margin:0;">
-      <input type="hidden" name="matricula" value="<?= htmlspecialchars($row['MATRICULA']) ?>">
-      <button type="submit">Modificar datos</button>
-    </form>
-
-    <form action="delete_item.php" method="get" style="margin:0;">
-      <input type="hidden" name="matricula" value="<?= htmlspecialchars($row['MATRICULA']) ?>">
-      <button type="submit" class="contrast">Eliminar vehículo</button>
-    </form>
-
-    <button type="button" onclick="window.location.href='items.php'">
-      Atrás
-    </button>
+	
+  <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+      <button type="button" id="modificar">Modificar datos</button>
+      <button type="button" id="eliminar">Eliminar vehículo</button>
+      <button type="button" id="cancelar">Cancelar</button>
   </div>
+  <script src="js/botones.js"></script>
 <?php endif; ?>
 
 <?php include("includes/footer.php"); ?>

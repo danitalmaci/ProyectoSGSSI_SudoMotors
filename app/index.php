@@ -21,15 +21,17 @@ include("includes/head.php");
 
 <!-- Contenedor vertical -->
 <nav style="display: flex; flex-direction: column; gap: 1rem;">
-  <?php if (isset($_SESSION['username'])): ?>
-      <a href="show_user.php?user=<?= urlencode($_SESSION['username']) ?>" role="button" class="contrast">Ver perfil</a>
-      <a href="login.php?logout=1" role="button" class="contrast">Cerrar sesión</a>
+  <?php if (isset($_SESSION['USERNAME'])): ?>
+      <button type="button" id="perfil">Ver perfil</button>
+      <button type="button" id="logout">Cerrar sesión</button>
+      <button type="button" id="lista">Listado de vehículos</button>
   <?php else: ?>
-      <a href="register.php" role="button" class="contrast">Registro de usuario</a>
-      <a href="login.php" role="button" class="contrast">Iniciar sesión</a>
+      <button type="button" id="register">Registro de usuario</button>
+      <button type="button" id="login">Iniciar sesión</button>
+      <button type="button" id="lista">Listado de vehículos</button>
   <?php endif; ?>
-  <a href="items.php" role="button">Listado de vehículos</a>
 </nav>
+<script src="js/botones.js"></script>
 
 
 <?php include("includes/footer.php"); ?>

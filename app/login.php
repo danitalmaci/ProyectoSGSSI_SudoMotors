@@ -169,7 +169,7 @@ include("includes/head.php");
     }, 1000);
   }
 </script>
-<script src="js/register.js"></script>
+<script src="js/botones.js"></script>
 
 <?php include("includes/footer.php"); ?>
 

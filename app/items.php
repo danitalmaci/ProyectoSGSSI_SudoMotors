@@ -78,8 +78,8 @@ include("includes/head.php");
 <?php endif; ?>
 
 <nav style="display:flex; justify-content:flex-end; gap:1rem; margin-bottom:1rem;">
-  <?php if (isset($_SESSION['username'])): ?>
-      <a href="show_user.php?user=<?= urlencode($_SESSION['username']) ?>">Ver perfil</a>
+  <?php if (isset($_SESSION['USERNAME'])): ?>
+      <a href="show_user.php?user=<?= urlencode($_SESSION['USERNAME']) ?>">Ver perfil</a>
   <?php else: ?>
       <a href="login.php">Iniciar sesión</a>
   <?php endif; ?>

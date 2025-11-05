@@ -63,18 +63,10 @@ include("includes/head.php");
 <p><strong>Teléfono:</strong> <?= htmlspecialchars($userRow['TELEFONO']) ?></p>
 <p><strong>DNI:</strong> <?= htmlspecialchars($userRow['DNI']) ?></p>
 
-<div style="margin-top: 1.5rem; display:flex; flex-direction:column; gap:0.75rem;">
-  <!-- Cambio mínimo: botón con navegación forzada por JS -->
-  <button type="button" onclick="window.location.href='modify_user.php'">Modificar datos</button>
-
-  <button type="button" onclick="window.location.href='login.php?logout=1'">
-    Cerrar sesión
-  </button>
-  
-  <button type="button" onclick="window.location.href='items.php'">
-      Cancelar
-  </button>
-    
+<div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+      <button type="button" id="modificar">Modificar datos</button>
+      <button type="button" id="logout">Cerrar sesión</button>
+      <button type="button" id="cancelar">Cancelar</button>
 </div>
-
+<script src="js/botones.js"></script>
 <?php include("includes/footer.php"); ?>

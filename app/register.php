@@ -143,6 +143,6 @@ include("includes/head.php");
 </form>
 
 <script src="js/comprobacionDatos.js"></script>
-<script src="js/register.js"></script>
+<script src="js/botones.js"></script>
 
 <?php include("includes/footer.php"); ?>
