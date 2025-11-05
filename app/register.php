@@ -138,20 +138,11 @@ include("includes/head.php");
 
   <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
     <button type="button" id="register_submit">Registrarme</button>
-    <button type="button" onclick="window.location.href='index.php'">Cancelar</button>
+    <button type="button" id="cancelar">Cancelar</button>
   </div>
 </form>
 
 <script src="js/comprobacionDatos.js"></script>
-<script>
-  const pass1 = document.getElementById('contrasena');
-  const pass2 = document.getElementById('confirmar_contrasena');
-  const toggle1 = document.getElementById('togglePass');
-
-  toggle1.addEventListener('change', () => {
-    pass1.type = toggle1.checked ? 'text' : 'password';
-    pass2.type = toggle1.checked ? 'text' : 'password';
-  });
-</script>
+<script src="js/register.js"></script>
 
 <?php include("includes/footer.php"); ?>

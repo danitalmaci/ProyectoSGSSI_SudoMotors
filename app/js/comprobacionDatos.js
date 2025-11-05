@@ -132,7 +132,7 @@
             if (val.length < 6) {
                 span.textContent = 'La contraseña debe tener al menos 6 caracteres.';
                 return false;
-           	else if (!validPsswd(val)){
+           	} else if (!validPsswd(val)){
            		span.textContent = 'La contraseña debe incluir al menos una mayúscula, un número y un carácter especial.';
                 return false;
             }
