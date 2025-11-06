@@ -114,8 +114,8 @@ include("includes/head.php");
 <nav style="display:flex; justify-content:flex-end; gap:1rem; margin-bottom:1rem;">
     <a href="items.php">Mostrar vehículos</a>
 
-    <?php if (!empty($_SESSION['username'])): ?>
-        <a href="show_user.php?user=<?= urlencode($_SESSION['username']) ?>">Ver perfil</a>
+    <?php if (!empty($_SESSION['USERNAME'])): ?>
+        <a href="show_user.php?user=<?= urlencode($_SESSION['USERNAME']) ?>">Ver perfil</a>
     <?php endif; ?>
 </nav>
 
@@ -131,7 +131,8 @@ include("includes/head.php");
 
 <?php if ($notFound): ?>
     <article role="alert"><strong>Vehículo no encontrado.</strong></article>
-    <button type="button" id="cancelar">Volver</button>
+    <button type="button" id="lista">Volver</button>
+    <script src="js/botones.js"></script>
     <?php include("includes/footer.php"); exit; ?>
 <?php endif; ?>
 

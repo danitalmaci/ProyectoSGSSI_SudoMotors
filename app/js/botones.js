@@ -82,7 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (listaBtn) {
     listaBtn.addEventListener('click', () => {
       if (window.location.pathname.endsWith('/') || window.location.pathname.includes('index.php')) {
- 
+        window.location.href = 'items.php';
+      }
+      else if (window.location.pathname.includes('modify_item.php') || window.location.pathname.includes('delete_item.php')) {
         window.location.href = 'items.php';
       }
     });

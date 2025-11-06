@@ -82,8 +82,8 @@ include("includes/head.php");
 
 <nav style="display:flex; justify-content:flex-end; gap:1rem; margin-bottom:1rem;">
   <a href="items.php">Mostrar vehículos</a>
-  <?php if (!empty($_SESSION['username'])): ?>
-    <a href="show_user.php?user=<?= urlencode($_SESSION['username']) ?>">Ver perfil</a>
+  <?php if (!empty($_SESSION['USERNAME'])): ?>
+    <a href="show_user.php?user=<?= urlencode($_SESSION['USERNAME']) ?>">Ver perfil</a>
   <?php endif; ?>
 </nav>
 
