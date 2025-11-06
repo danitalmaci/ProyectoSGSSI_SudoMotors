@@ -12,7 +12,6 @@ verificar_csrf();
 // ------------------------------------------------------------
 // CONTROL DE ACCESO
 // ------------------------------------------------------------
-require_once 'includes/init.php';
 requireLogin();
 requireAdmin();
 
@@ -26,6 +25,11 @@ $matricula = strtoupper(trim($_GET['matricula'] ?? ''));
 if (!preg_match('/^[0-9]{4}\s?[A-Z]{3}$/', $matricula)) {
     die("Matrícula no válida.");
 }
+
+// Inicializar variables
+$errors = [];
+$notFound = false;
+
 $matricula = mysqli_real_escape_string($conn, $matricula);
 
 $stmt = $conn->prepare("SELECT * FROM VEHICULO WHERE MATRICULA=?");
@@ -35,8 +39,8 @@ $query = $stmt->get_result();
 $stmt->close();
 
 if (!$query || mysqli_num_rows($query) <= 0) {
-    echo "Vehículo no encontrado.";
-    exit;
+    $vehiculo_data = null;
+    $notFound = true;
 }
 
 $vehiculo_data = mysqli_fetch_assoc($query);
@@ -76,6 +80,12 @@ include("includes/head.php");
   <h3>¿Seguro que deseas borrar este vehículo?</h3>
 </hgroup>
 
+<?php if ($notFound): ?>
+    <article role="alert"><strong>Vehículo no encontrado.</strong></article>
+    <button type="button" id="cancelar">Volver</button>
+    <?php include("includes/footer.php"); exit; ?>
+<?php endif; ?>
+
 <table>
   <tr><th>Matrícula</th><td><?= htmlspecialchars($vehiculo_data['MATRICULA']) ?></td></tr>
   <tr><th>Marca</th><td><?= htmlspecialchars($vehiculo_data['MARCA']) ?></td></tr>
@@ -86,10 +96,8 @@ include("includes/head.php");
       style="margin-top:1.5rem; display:flex; flex-direction:column; gap:0.5rem;">
   <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
   <button type="submit" class="contrast">Sí, borrar vehículo</button>
-  <button type="button" onclick="window.location.href='show_item.php?matricula=<?= urlencode($matricula) ?>'">
-      Cancelar
-  </button>
-
+  <button type="button" id="cancelar">Cancelar</button>
 </form>
+<script src="js/botones.js"></script>
 
 <?php include("includes/footer.php"); ?>

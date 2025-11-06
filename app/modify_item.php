@@ -13,7 +13,6 @@ verificar_csrf();
 // ------------------------------------------------------------
 // CONTROL DE ACCESO
 // ------------------------------------------------------------
-require_once 'includes/init.php';
 requireLogin();
 requireAdmin();
 
@@ -31,6 +30,7 @@ if (!preg_match('/^[0-9]{4}\s?[A-Z]{3}$/', $matricula)) {
 
 // Inicializar variables
 $errors = [];
+$notFound = false;
 
 // Buscar los datos del vehículo a partir del parámetro del formulario
 $stmt = $conn->prepare("SELECT * FROM VEHICULO WHERE MATRICULA=? LIMIT 1");
@@ -41,6 +41,7 @@ $query = $stmt->get_result();
 // Si no hay resultados, se guarda null
 if (!$query || mysqli_num_rows($query) == 0) {
     $vehiculo_data = null;
+    $notFound = true;
 } 
 // Si hay resultados, se guardan los datos actuales del vehículo
 else {
@@ -130,7 +131,7 @@ include("includes/head.php");
 
 <?php if ($notFound): ?>
     <article role="alert"><strong>Vehículo no encontrado.</strong></article>
-    <button type="button" onclick="window.location.href='items.php'">Volver</button>
+    <button type="button" id="cancelar">Volver</button>
     <?php include("includes/footer.php"); exit; ?>
 <?php endif; ?>
 
@@ -167,12 +168,11 @@ include("includes/head.php");
 
     <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.75rem;">
         <button type="button" id="item_modify_submit">Guardar cambios</button>
-        <button type="button" onclick="window.location.href='show_item.php?matricula=<?= urlencode($vehiculo_data['MATRICULA']) ?>'">
-            Cancelar
-        </button>
+        <button type="button" id="cancelar">Cancelar</button>
     </div>
 </form>
 
+<script src="js/botones.js"></script>
 <script src="js/comprobacionVehiculo.js"></script>
 
 <?php include("includes/footer.php"); ?>

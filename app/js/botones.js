@@ -27,12 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Botón cancelar
   if (cancelBtn) {
     cancelBtn.addEventListener('click', () => {
-      if (window.location.pathname.includes('register.php') || window.location.pathname.includes('login.php')) {
+      if (window.location.pathname.includes('add_item.php')) {
+        window.location.href = 'items.php';
+      } else if (window.location.pathname.includes('modify_item.php') || window.location.pathname.includes('delete_item.php')) {
+        window.location.href = `show_item.php?matricula=${encodeURIComponent(matricula)}`;
+      } else if (window.location.pathname.includes('register.php') || window.location.pathname.includes('login.php')) {
         window.location.href = 'index.php';
       } else if (window.location.pathname.includes('show_item.php')) {
         window.location.href = 'items.php';
-      }
-      else if (window.location.pathname.includes('show_user.php')) {
+      } else if (window.location.pathname.includes('show_user.php')) {
         window.location.href = 'items.php';
       }
     });

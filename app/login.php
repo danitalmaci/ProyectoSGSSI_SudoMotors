@@ -49,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // LOGIN CORRECTO
             $userData = $result->fetch_assoc();
             $_SESSION['USERNAME'] = $userData['USERNAME'];
+            $_SESSION['ROLE'] = $userData['ROLE'];
 
             $conn->query("DELETE FROM LOGIN_INTENTOS WHERE USERNAME = '$user' OR IP_ADDRESS = '$ip'");
             registrarLog($conn, $user, $ip, 'EXITO', 'Inicio de sesión correcto');

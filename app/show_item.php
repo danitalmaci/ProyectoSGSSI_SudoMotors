@@ -43,6 +43,11 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
     $successMessage = "Los datos del vehículo se han actualizado correctamente.";
 }
 
+$errorMessage = "";
+if (isset($_GET['error']) && $_GET['error'] === 'admin') {
+    $errorMessage = "Acceso denegado: se requieren privilegios de administrador.";
+}
+
 $conn->close();
 
 // Título de la página y head
@@ -63,6 +68,12 @@ include("includes/head.php");
   <h1>Datos del vehículo seleccionado</h1>
   <h3>Consulta o modifica la información registrada</h3>
 </hgroup>
+
+<?php if(!empty($errorMessage)): ?>
+  <article role="alert" style="background-color:#ffe4e4; border:1px solid #cc0000; padding:0.5rem; margin-bottom:1rem;">
+    <strong><?= htmlspecialchars($errorMessage) ?></strong>
+  </article>
+<?php endif; ?>
 
 <?php if(!empty($successMessage)): ?>
   <article role="alert">

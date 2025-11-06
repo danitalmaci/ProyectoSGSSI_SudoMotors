@@ -12,18 +12,12 @@ function requireLogin() {
 }
 
 function requireAdmin() {
-    requireLogin();
-    if ($_SESSION['ROLE'] !== 'admin') {
-        http_response_code(403);
-        die("Acceso denegado: se requieren privilegios de administrador.");
+    if (!isset($_SESSION['ROLE']) || $_SESSION['ROLE'] !== 'admin') {
+        $redirect = $_SERVER['HTTP_REFERER'] ?? 'items.php';
+
+        // Si la URL ya tiene parámetros, usar "&", si no, usar "?"
+        $separator = (strpos($redirect, '?') !== false) ? '&' : '?';
+        header("Location: {$redirect}{$separator}error=admin");
+        exit;
     }
 }
-
-function requireOwnerOrAdmin($owner) {
-    requireLogin();
-    if ($_SESSION['ROLE'] !== 'admin' && $_SESSION['USERNAME'] !== $owner) {
-        http_response_code(403);
-        die("Acceso denegado: no tienes permiso para acceder a este recurso.");
-    }
-}
-

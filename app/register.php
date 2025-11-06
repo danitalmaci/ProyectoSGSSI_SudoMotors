@@ -50,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     if ($stmt_insert->execute()) {
-      $_SESSION['username'] = $username;
+      $_SESSION['USERNAME'] = $username;
+      $_SESSION['ROLE'] = "user";
       header("Location: items.php");
       exit;
     } else {

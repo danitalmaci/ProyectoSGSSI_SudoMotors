@@ -135,10 +135,10 @@ include("includes/head.php");
 
   <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.75rem;">
     <button type="button" id="item_add_submit">Guardar vehículo</button>
-    <button type="button" onclick="window.location.href='items.php'">Cancelar</button>
+    <button type="button" id="cancelar">Cancelar</button>
   </div>
 </form>
-
+<script src="js/botones.js"></script>
 <script src="js/comprobacionVehiculo.js"></script>
 
 <?php include("includes/footer.php"); ?>

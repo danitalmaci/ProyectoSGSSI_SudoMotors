@@ -59,6 +59,11 @@ $successMessage = "";
 if (isset($_GET['success']) && $_GET['success'] == 1) {
     $successMessage = "El vehículo se ha añadido correctamente.";
 }
+//Mensaje requiere privilegios
+$errorMessage = "";
+if (isset($_GET['error']) && $_GET['error'] === 'admin') {
+    $errorMessage = "Acceso denegado: se requieren privilegios de administrador.";
+}
 // Mensaje para indicar que el vehiculo ha sido eliminado correctamente
 if (isset($_GET['success']) && $_GET['success'] == 2) {
     $successMessage = "El vehículo se ha eliminado correctamente.";
@@ -70,6 +75,11 @@ $conn->close();
 $pageTitle = "Vehículos - SudoMotors";
 include("includes/head.php");
 ?>
+<?php if(!empty($errorMessage)): ?>
+  <article role="alert" style="background-color:#ffe4e4; border:1px solid #cc0000; padding:0.5rem; margin-bottom:1rem;">
+    <strong><?= htmlspecialchars($errorMessage) ?></strong>
+  </article>
+<?php endif; ?>
 
 <?php if(!empty($successMessage)): ?>
   <article role="alert">
