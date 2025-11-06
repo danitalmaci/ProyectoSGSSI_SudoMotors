@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Registrar
   if (registerBtn) {
     registerBtn.addEventListener('click', () => {
-      if (window.location.pathname.includes('index.php')) {
+      if (window.location.pathname.endsWith('/') || window.location.pathname.includes('index.php')) {
         window.location.href = 'register.php';
       }
     });
