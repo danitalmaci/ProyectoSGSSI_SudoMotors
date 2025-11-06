@@ -1,1 +1,4 @@
 mysql/
+certs/*.key
+certs/*.crt
+certs/*.pem
