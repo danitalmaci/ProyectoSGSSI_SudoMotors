@@ -33,10 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = `show_item.php?matricula=${encodeURIComponent(matricula)}`;
       } else if (window.location.pathname.includes('register.php') || window.location.pathname.includes('login.php')) {
         window.location.href = 'index.php';
-      } else if (window.location.pathname.includes('show_item.php')) {
+      } else if (window.location.pathname.includes('show_item.php') || window.location.pathname.includes('show_user.php')) {
         window.location.href = 'items.php';
-      } else if (window.location.pathname.includes('show_user.php')) {
-        window.location.href = 'items.php';
+      } else if (window.location.pathname.includes('modify_user.php')) {
+        window.location.href = 'show_user.php';
       }
     });
   }

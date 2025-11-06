@@ -144,31 +144,16 @@ include("includes/head.php");
     	<label>Teléfono:</label>
     	<input type="text" name="telefono" value="<?= htmlspecialchars($user_data['TELEFONO']) ?>" required><br>
 
-		<label>Fecha de nacimiento:</label>
-		<input type="date" name="f_nacimiento" value="<?= htmlspecialchars($user_data['F_NACIMIENTO']) ?>" required><br>
+	<label>Fecha de nacimiento:</label>
+	<input type="date" name="f_nacimiento" value="<?= htmlspecialchars($user_data['F_NACIMIENTO']) ?>" required><br>
 
-		<button type="button" id="user_modify_submit">Guardar cambios</button>
-		<button type="button" onclick="window.location.href='show_user.php?user=<?= urlencode($_SESSION['USERNAME']) ?>'">
-    		Cancelar
-		</button>
+	<button type="button" id="user_modify_submit">Guardar cambios</button>
+	<button type="button" id="cancelar">Cancelar</button>
+	
 	</form>
 
-	
+	<script src="js/botones.js"></script>
 	<script src="js/comprobacionDatos.js"></script>
-
-	
-	<script>
-  		const pass1 = document.getElementById('contrasena');
-  		const pass2 = document.getElementById('confirmar_contrasena');
-  		const toggle = document.getElementById('togglePass');
-
-  		toggle.addEventListener('change', () => {
-    		const type = toggle.checked ? 'text' : 'password';
-    		pass1.type = type;
-    		pass2.type = type;
-  		});
-	</script>
-
 </body>
 
 </html>
