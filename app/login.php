@@ -131,10 +131,11 @@ include("includes/head.php");
   <button type="submit" <?= $tiempoRestante > 0 ? 'disabled' : '' ?>><?= $tiempoRestante > 0 ? 'Esperando...' : 'Iniciar sesión' ?></button>
   <span>¿No estás registrado? <a href="register.php">Regístrate</a></span>
 
-  <button type="button" style="font-size: 16px; padding: 8px 10px;" onclick="window.location.href='index.php'">Cancelar</button>
+  <button type="button" id="cancelar">Cancelar</button>
 </form>
 <?php if ($tiempoRestante > 0): ?>
   <script src="js/contador.js"></script>
 <?php endif; ?>
+<script src="js/botones.js"></script>
 <?php include("includes/footer.php"); ?>
 
