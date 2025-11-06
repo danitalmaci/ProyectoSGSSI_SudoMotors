@@ -3,8 +3,6 @@ session_start();
 header("X-XSS-Protection: 1; mode=block");
 
 include 'connection.php'; // conexión a la BD
-include 'includes/security.php';
-verificar_csrf();
 
 $message = "";
 $tiempoRestante = 0;
@@ -48,20 +46,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $result = $stmt->get_result();
 
         if ($result && $result->num_rows > 0) {
-    	    // LOGIN CORRECTO
-    	    $userData = $result->fetch_assoc();
+            // LOGIN CORRECTO
+            $userData = $result->fetch_assoc();
+            $_SESSION['USERNAME'] = $userData['USERNAME'];
 
-    	    // Guardar usuario y rol
-    	    $_SESSION['USERNAME'] = $userData['USERNAME'];
-    	    $_SESSION['ROLE'] = $userData['ROLE'] ?? 'user'; // Rol por defecto
+            $conn->query("DELETE FROM LOGIN_INTENTOS WHERE USERNAME = '$user' OR IP_ADDRESS = '$ip'");
+            registrarLog($conn, $user, $ip, 'EXITO', 'Inicio de sesión correcto');
 
-    	    // Limpiar intentos fallidos
-    	    $conn->query("DELETE FROM LOGIN_INTENTOS WHERE USERNAME = '$user' OR IP_ADDRESS = '$ip'");
-    	    registrarLog($conn, $user, $ip, 'EXITO', 'Inicio de sesión correcto');
-
-    	    header("Location: items.php");
-    	    exit;
-	} else {
+            header("Location: items.php");
+            exit;
+        } else {
             // LOGIN FALLIDO
             registrarIntento($conn, $user, $ip);
             registrarLog($conn, $user, $ip, 'FALLO', 'Usuario o contraseña incorrectos');
@@ -127,7 +121,6 @@ include("includes/head.php");
 <?php endif; ?>
 
 <form id="login_form" method="POST" action="">
-  <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
   <label for="user">Usuario:</label>
   <input type="text" id="user" name="user" required value="<?= htmlspecialchars($v_user) ?>" <?= $tiempoRestante > 0 ? 'disabled' : '' ?>>
 
@@ -138,38 +131,10 @@ include("includes/head.php");
   <button type="submit" <?= $tiempoRestante > 0 ? 'disabled' : '' ?>><?= $tiempoRestante > 0 ? 'Esperando...' : 'Iniciar sesión' ?></button>
   <span>¿No estás registrado? <a href="register.php">Regístrate</a></span>
 
-  <button type="button" id="cancelar">Cancelar</button>
-
+  <button type="button" style="font-size: 16px; padding: 8px 10px;" onclick="window.location.href='index.php'">Cancelar</button>
 </form>
-
-<script>
-  // Mostrar/ocultar contraseña
-  const pass1 = document.getElementById('contrasena');
-  const toggle1 = document.getElementById('togglePass');
-  if (toggle1) {
-    toggle1.addEventListener('change', () => {
-      pass1.type = toggle1.checked ? 'text' : 'password';
-    });
-  }
-
-  // Si hay cuenta atrás
-  let contador = document.getElementById('contador');
-  if (contador) {
-    let tiempo = parseInt(contador.textContent);
-    const boton = document.querySelector("button[type='submit']");
-
-    const intervalo = setInterval(() => {
-      tiempo--;
-      contador.textContent = tiempo;
-
-      if (tiempo <= 0) {
-        clearInterval(intervalo);
-        location.reload();
-      }
-    }, 1000);
-  }
-</script>
-<script src="js/botones.js"></script>
-
+<?php if ($tiempoRestante > 0): ?>
+  <script src="js/contador.js"></script>
+<?php endif; ?>
 <?php include("includes/footer.php"); ?>
 
