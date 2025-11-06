@@ -15,5 +15,4 @@ function requireAdmin() {
         die("Acceso denegado: se requieren privilegios de administrador.");
     }
 }
-}
-
+?>
