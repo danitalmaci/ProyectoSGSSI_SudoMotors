@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cerrar sesión
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-      if (window.location.pathname.includes('show_user.php') || window.location.pathname.includes('index.php')) {
+      if (window.location.pathname.includes('show_user.php') || window.location.pathname.includes('index.php') || window.location.pathname.endsWith('/')) {
         window.location.href = 'login.php?logout=1';
       }
     });
