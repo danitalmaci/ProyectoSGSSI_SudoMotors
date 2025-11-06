@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Iniciar sesión
   if (loginBtn) {
     loginBtn.addEventListener('click', () => {
-      if (window.location.pathname.includes('index.php')) {
+      if (window.location.pathname.endsWith('/') || window.location.pathname.includes('index.php')) {
+ 
         window.location.href = 'login.php';
       }
     });
@@ -77,7 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ver lista vehículos
   if (listaBtn) {
     listaBtn.addEventListener('click', () => {
-      if (window.location.pathname.includes('index.php')) {
+      if (window.location.pathname.endsWith('/') || window.location.pathname.includes('index.php')) {
+ 
         window.location.href = 'items.php';
       }
     });
@@ -86,7 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ver perfil
   if (perfilBtn) {
     perfilBtn.addEventListener('click', () => {
-    if (window.location.pathname.includes('index.php')) {
+    if (window.location.pathname.endsWith('/') || window.location.pathname.includes('index.php')) {
+
         const user = new URLSearchParams(window.location.search).get('user');
         window.location.href = `show_user.php?user=${encodeURIComponent(user)}`;
       }
