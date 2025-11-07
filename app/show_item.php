@@ -1,10 +1,10 @@
 <?php	
 // ------------------------------------------------------------
-// Ver información del vehículo	
+// INFORMACIÓN DEL VEHÍCULO
 // ------------------------------------------------------------
+session_start();
 header("X-XSS-Protection: 1; mode=block");
 
-session_start();
 include 'connection.php';
 
 $vehiculos_html = "";

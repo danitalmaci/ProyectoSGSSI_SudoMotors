@@ -1,6 +1,6 @@
 <?php
 // ------------------------------------------------------------
-// Formulario para registrarse
+// FORMULARIO PARA RESGISTRARSE
 // ------------------------------------------------------------
 session_start();
 header("X-XSS-Protection: 1; mode=block");

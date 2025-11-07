@@ -1,6 +1,6 @@
 <?php session_start();
 // ------------------------------------------------------------
-// Formulario para modificar Usuario
+// FORMULARIO PARA MODIFICAR USUARIO
 // ------------------------------------------------------------
 header("X-XSS-Protection: 1; mode=block");
 

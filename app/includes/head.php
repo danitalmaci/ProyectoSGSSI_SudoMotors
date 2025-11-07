@@ -10,7 +10,7 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
 if (session_status() === PHP_SESSION_NONE) {
   session_set_cookie_params([
     'httponly' => true,
-    'secure' => false,   // Cambiar a true si usamos HTTPS
+    'secure' => true,  
     'samesite' => 'Strict'
   ]);
   session_start();

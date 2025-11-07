@@ -1,4 +1,7 @@
 <?php
+// ------------------------------------------------------------
+// LISTADO DE VEHÍCULOS
+// ------------------------------------------------------------
 session_start();
 
 // Conexión a la base de datos
@@ -76,7 +79,7 @@ $pageTitle = "Vehículos - SudoMotors";
 include("includes/head.php");
 ?>
 <?php if(!empty($errorMessage)): ?>
-  <article role="alert" style="background-color:#ffe4e4; border:1px solid #cc0000; padding:0.5rem; margin-bottom:1rem;">
+  <article role="alert" style="background-color:#2b2b2b; color:#ffbaba; border:1px solid #ff6b6b; padding:0.5rem; margin-bottom:1rem; border-radius:4px;">
     <strong><?= htmlspecialchars($errorMessage) ?></strong>
   </article>
 <?php endif; ?>

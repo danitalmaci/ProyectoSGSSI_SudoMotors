@@ -1,4 +1,5 @@
 FROM php:8.4.12-apache
+
 RUN docker-php-ext-install mysqli
 RUN a2enmod ssl
 RUN a2ensite default-ssl.conf
