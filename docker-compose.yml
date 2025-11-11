@@ -13,6 +13,8 @@ services:
       volumes:
         - ./app:/var/www/html/
         - ./certs:/etc/apache2/ssl
+        - ./generate-certs.sh:/usr/local/bin/generate-certs.sh
+      command: ["/bin/sh", "-c", "/usr/local/bin/generate-certs.sh"]
 
    db:
      image: mariadb:12.0.2
